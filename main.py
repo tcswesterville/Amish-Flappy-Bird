@@ -19,18 +19,16 @@ background=pygame.image.load(backgroundImage)
 pipe=pygame.image.load(pipeImage)
 bird=pygame.image.load(birdImage)
 
+
 bird = pygame.transform.scale(bird,(150,150))
-pipe = pygame.transform.scale(pipe,(199,199))
+
 pipeupsidedown=pygame.transform.flip(pipe,False,True)
 playerPosition = bird.get_rect()
-playerPosition.y =WINDOW_HEIGHT/2
+playerPosition.y = WINDOW_HEIGHT/2
 playerPosition.x = WINDOW_WIDTH/6
 
-pipePosition = pipe.get_rect()
-pipePosition.y = WINDOW_HEIGHT/2
-pipePosition.x = WINDOW_WIDTH/1
 
-pipelist=[pipePosition]
+pipelist=[]
 
 screen=pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("bum bum bum bum bum")
@@ -38,15 +36,29 @@ pygame.display.set_caption("bum bum bum bum bum")
 gameoverfont=pygame.font.Font('Lobster-Regular.ttf', 40)
 running = True
 
+def make_pipe():
+   top_new_pipe = bottom_new_pipe = pygame.transform.scale(pipe,(199,199)).get_rect()
+   top_new_pipe.y = pipe.get_height()
+   bottom_new_pipe.y =WINDOW_HEIGHT - pipe.get_height()
+
+   top_new_pipe.x = WINDOW_WIDTH
+   bottom_new_pipe.x=WINDOW_WIDTH
+
+   pipelist.append(top_new_pipe)
+   pipelist.append(bottom_new_pipe)
+
+make_pipe()
+
 while running:
     for sigmapipe in pipelist:
+        print(sigmapipe.x)
         sigmapipe.x-=3
         if playerPosition.colliderect(sigmapipe):
-            print(playerPosition,pipePosition)
-            running =False
+            running = False
+        screen.blit(pipeupsidedown, sigmapipe)
+
     pygame.time.Clock().tick(30)
     screen.blit(background, background.get_rect())
-    screen.blit(pipeupsidedown, pipePosition)
     screen.blit(bird, playerPosition)
     if playerPosition.y <0 or playerPosition.y>WINDOW_HEIGHT :
         running=False
@@ -63,5 +75,6 @@ while running:
     playerPosition.y +=5.2
 
     pygame.display.flip()
+
 
 
