@@ -4,6 +4,7 @@ import pygame
 import sys
 # RUNS SOUND IN CODE
 pygame.init()
+pygame.font.init()
 pygame.mixer.init()
 pygame.mixer.music.load("Sound nice/hi song.mp3")
 pygame.mixer.music.play(-1)
@@ -63,11 +64,7 @@ class Pipe:
         self.bottom_pipe.x -= 5
         self.top_pipe.x -= 5
         if playerPosition.colliderect(self.top_pipe) or playerPosition.colliderect(self.bottom_pipe):
-            gameoverfont = pygame.font.Font('Lobster-Regular.ttf', 40)
-            text =  gameoverfont.render('GAME OVER', True,(255,255,255),(0,0,0))
-            text.get_rect().center =(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2)
-
-            #pygame.quit()
+            pygame.quit()
 
         if self.bottom_pipe.x < WINDOW_WIDTH / 2 and not self.made_next_pipe:
             new_pipe = Pipe()
@@ -84,6 +81,7 @@ while running:
     pygame.time.Clock().tick(30)
     screen.blit(background, background.get_rect())
     screen.blit(bird, playerPosition)
+    screen.blit(display_gameover_text(), (0, 0))
     if playerPosition.y < 0 or playerPosition.y > WINDOW_HEIGHT:
         running=False
     for event in pygame.event.get():
@@ -102,8 +100,6 @@ while running:
         screen.blit(pipe.scaled_pipe_image, pipe.top_pipe)
         screen.blit(pipe.flipped_pipe_image, pipe.bottom_pipe)
         pipe.move_pipe()
-
     pygame.display.update()
-
 
 
